@@ -1,10 +1,13 @@
 
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useCallback } from 'react'
 import './App.css'
+
+const API_URL = 'https://input-back.onrender.com/api/nombres'
 
 interface Registro {
   id: number
-  nombre: string
+  name: string
+  created_at: string
 }
 
 function App() {
@@ -12,8 +15,31 @@ function App() {
   const [registros, setRegistros] = useState<Registro[]>([])
   const [editandoId, setEditandoId] = useState<number | null>(null)
   const [menuAbiertoId, setMenuAbiertoId] = useState<number | null>(null)
+  const [cargando, setCargando] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const menuRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
+
+  // Obtener todos los registros
+  const fetchRegistros = useCallback(async () => {
+    setCargando(true)
+    setError(null)
+    try {
+      const res = await fetch(API_URL)
+      if (!res.ok) throw new Error('Error al obtener los nombres')
+      const data: Registro[] = await res.json()
+      setRegistros(data)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Error de conexión con el servidor')
+    } finally {
+      setCargando(false)
+    }
+  }, [])
+
+  // Cargar registros al montar
+  useEffect(() => {
+    fetchRegistros()
+  }, [fetchRegistros])
 
   // Cerrar menú al hacer clic fuera
   useEffect(() => {
@@ -26,35 +52,68 @@ function App() {
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!nombre.trim()) return
+    setError(null)
 
-    if (editandoId !== null) {
-      setRegistros(prev =>
-        prev.map(r => (r.id === editandoId ? { ...r, nombre: nombre.trim() } : r))
-      )
-      setEditandoId(null)
-    } else {
-      setRegistros(prev => [...prev, { id: Date.now(), nombre: nombre.trim() }])
+    try {
+      if (editandoId !== null) {
+        // PUT /api/nombres/:id
+        const res = await fetch(`${API_URL}/${editandoId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name: nombre.trim() }),
+        })
+        if (!res.ok) {
+          const data = await res.json()
+          throw new Error(data.error || 'Error al actualizar')
+        }
+        setEditandoId(null)
+      } else {
+        // POST /api/nombres
+        const res = await fetch(API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name: nombre.trim() }),
+        })
+        if (!res.ok) {
+          const data = await res.json()
+          throw new Error(data.error || 'Error al crear')
+        }
+      }
+      setNombre('')
+      await fetchRegistros()
+      inputRef.current?.focus()
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Error inesperado')
     }
-    setNombre('')
-    inputRef.current?.focus()
   }
 
   const handleEditar = (registro: Registro) => {
-    setNombre(registro.nombre)
+    setNombre(registro.name)
     setEditandoId(registro.id)
     setMenuAbiertoId(null)
     inputRef.current?.focus()
   }
 
-  const handleEliminar = (id: number) => {
-    setRegistros(prev => prev.filter(r => r.id !== id))
+  const handleEliminar = async (id: number) => {
     setMenuAbiertoId(null)
-    if (editandoId === id) {
-      setEditandoId(null)
-      setNombre('')
+    setError(null)
+    try {
+      // DELETE /api/nombres/:id
+      const res = await fetch(`${API_URL}/${id}`, { method: 'DELETE' })
+      if (!res.ok) {
+        const data = await res.json()
+        throw new Error(data.error || 'Error al eliminar')
+      }
+      if (editandoId === id) {
+        setEditandoId(null)
+        setNombre('')
+      }
+      await fetchRegistros()
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Error inesperado')
     }
   }
 
@@ -76,6 +135,18 @@ function App() {
             Agrega, edita y elimina registros
           </p>
         </div>
+
+        {/* Error banner */}
+        {error && (
+          <div className="mb-4 px-4 py-3 bg-red-500/10 border border-red-500/30 rounded-xl flex items-center justify-between">
+            <p className="text-sm text-red-400">{error}</p>
+            <button onClick={() => setError(null)} className="text-red-400 hover:text-red-300 ml-3 cursor-pointer">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+              </svg>
+            </button>
+          </div>
+        )}
 
         {/* Input Form */}
         <form onSubmit={handleSubmit} className="mb-8">
@@ -125,7 +196,12 @@ function App() {
           </div>
 
           {/* Registros */}
-          {registros.length === 0 ? (
+          {cargando ? (
+            <div className="px-5 py-12 text-center">
+              <div className="inline-block h-8 w-8 animate-spin rounded-full border-2 border-slate-600 border-t-blue-500"></div>
+              <p className="text-slate-500 text-sm mt-3">Cargando registros...</p>
+            </div>
+          ) : registros.length === 0 ? (
             <div className="px-5 py-12 text-center">
               <div className="text-slate-600 mb-2">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -145,7 +221,7 @@ function App() {
                   }`}
                 >
                   <span className="text-sm font-mono text-slate-500">{index + 1}</span>
-                  <span className="text-sm text-slate-200 truncate">{registro.nombre}</span>
+                  <span className="text-sm text-slate-200 truncate">{registro.name}</span>
                   <div className="relative flex justify-end" ref={menuAbiertoId === registro.id ? menuRef : null}>
                     <button
                       onClick={() => setMenuAbiertoId(menuAbiertoId === registro.id ? null : registro.id)}
