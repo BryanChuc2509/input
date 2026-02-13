@@ -55,6 +55,16 @@ function App() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!nombre.trim()) return
+
+    if (/[<>]/.test(nombre)) {
+      setError('¡Eyeyeyeyyy, tranquilo hacker! No se permiten los caracteres < > :v')
+      return
+    }
+
+    if (/[*]/.test(nombre)) {
+      setError('¡Eyeyeyeyyy, tranquilo hacker! SELECT * FROM ip; 127.0.0.1 :v')
+      return
+    }
     setError(null)
 
     try {
@@ -123,13 +133,7 @@ function App() {
     inputRef.current?.focus()
   }
 
-  // Sanitizar input: bloquear caracteres de inyección
   const handleInputChange = (value: string) => {
-    if (/[<>{}]/.test(value)) {
-      setError('¡Eyeyeyeyyy, tranquilo hacker! :v')
-      return
-    }
-    setError(null)
     if (value.length <= 255) {
       setNombre(value)
     }
