@@ -140,27 +140,27 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-slate-900 via-slate-800 to-slate-900 flex items-start justify-center pt-16 px-4">
+    <div className="min-h-screen bg-white flex items-start justify-center pt-16 px-4">
       <div className="w-full max-w-xl">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-white tracking-tight">
+          <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-blue-600 via-blue-400 to-cyan-400 bg-clip-text text-transparent">
             Registro de Nombres
           </h1>
-          <p className="text-slate-400 mt-2 text-sm">
+          <p className="text-slate-500 mt-2 text-sm">
             No se aceptan: números ni símbolos como
             {" < > ( ) = ' \" / \\ ; { } @ # $ % & * ! ? + _ . , : | "}
           </p>
-          <p className="text-slate-400 mt-2 text-sm">
+          <p className="text-slate-500 mt-2 text-sm">
             No vas a poder? Si puedes me dices, va?
           </p>
         </div>
 
         {/* Error banner */}
         {error && (
-          <div className="mb-4 px-4 py-3 bg-red-500/10 border border-red-500/30 rounded-xl flex items-center justify-between">
-            <p className="text-sm text-red-400">{error}</p>
-            <button onClick={() => setError(null)} className="text-red-400 hover:text-red-300 ml-3 cursor-pointer">
+          <div className="mb-4 px-4 py-3 bg-red-50 border border-red-200 rounded-xl flex items-center justify-between">
+            <p className="text-sm text-red-600">{error}</p>
+            <button onClick={() => setError(null)} className="text-red-400 hover:text-red-600 ml-3 cursor-pointer">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
                 <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
               </svg>
@@ -179,13 +179,13 @@ function App() {
                 onChange={e => handleInputChange(e.target.value)}
                 placeholder="Escribe un nombre..."
                 maxLength={255}
-                className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 outline-none transition-all duration-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:bg-slate-800"
+                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 outline-none transition-all duration-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:bg-white"
               />
               {editandoId !== null && (
                 <button
                   type="button"
                   onClick={handleCancelar}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white transition-colors"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 transition-colors"
                   title="Cancelar edición"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -197,7 +197,7 @@ function App() {
             <button
               type="submit"
               className={`px-6 py-3 rounded-xl font-semibold text-sm transition-all duration-200 cursor-pointer ${editandoId !== null
-                  ? 'bg-amber-500 hover:bg-amber-400 text-slate-900 shadow-lg shadow-amber-500/20'
+                  ? 'bg-amber-500 hover:bg-amber-400 text-white shadow-lg shadow-amber-500/20'
                   : 'bg-blue-500 hover:bg-blue-400 text-white shadow-lg shadow-blue-500/20'
                 }`}
             >
@@ -205,7 +205,7 @@ function App() {
             </button>
           </div>
           {nombre.length > 0 && (
-            <p className={`text-xs mt-2 text-right ${nombre.length > 240 ? 'text-amber-400' : 'text-slate-500'
+            <p className={`text-xs mt-2 text-right ${nombre.length > 240 ? 'text-amber-500' : 'text-slate-400'
               }`}>
               {nombre.length}/255
             </p>
@@ -213,44 +213,44 @@ function App() {
         </form>
 
         {/* Tabla de registros */}
-        <div className="bg-slate-800/40 border border-slate-700/50 rounded-2xl overflow-hidden backdrop-blur-sm">
+        <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
           {/* Header de tabla */}
-          <div className="grid grid-cols-[60px_1fr_48px] px-5 py-3 bg-slate-800/60 border-b border-slate-700/50">
-            <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">#</span>
-            <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Nombre</span>
-            <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider text-right"></span>
+          <div className="grid grid-cols-[60px_1fr_48px] px-5 py-3 bg-slate-50 border-b border-slate-200">
+            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">#</span>
+            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Nombre</span>
+            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider text-right"></span>
           </div>
 
           {/* Registros */}
           {cargando ? (
             <div className="px-5 py-12 text-center">
-              <div className="inline-block h-8 w-8 animate-spin rounded-full border-2 border-slate-600 border-t-blue-500"></div>
-              <p className="text-slate-500 text-sm mt-3">Cargando registros...</p>
+              <div className="inline-block h-8 w-8 animate-spin rounded-full border-2 border-slate-200 border-t-blue-500"></div>
+              <p className="text-slate-400 text-sm mt-3">Cargando registros...</p>
             </div>
           ) : registros.length === 0 ? (
             <div className="px-5 py-12 text-center">
-              <div className="text-slate-600 mb-2">
+              <div className="text-slate-300 mb-2">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                 </svg>
               </div>
-              <p className="text-slate-500 text-sm">No hay registros aún</p>
-              <p className="text-slate-600 text-xs mt-1">Agrega un nombre para comenzar</p>
+              <p className="text-slate-400 text-sm">No hay registros aún</p>
+              <p className="text-slate-400 text-xs mt-1">Agrega un nombre para comenzar</p>
             </div>
           ) : (
-            <div className="divide-y divide-slate-700/30">
+            <div className="divide-y divide-slate-100">
               {registros.map((registro, index) => (
                 <div
                   key={registro.id}
-                  className={`grid grid-cols-[60px_1fr_48px] items-center px-5 py-3.5 transition-colors duration-150 hover:bg-slate-700/20 ${editandoId === registro.id ? 'bg-amber-500/5 border-l-2 border-l-amber-500' : ''
+                  className={`grid grid-cols-[60px_1fr_48px] items-center px-5 py-3.5 transition-colors duration-150 hover:bg-slate-50 ${editandoId === registro.id ? 'bg-amber-50 border-l-2 border-l-amber-500' : ''
                     }`}
                 >
-                  <span className="text-sm font-mono text-slate-500">{index + 1}</span>
-                  <span className="text-sm text-slate-200 truncate">{registro.name}</span>
+                  <span className="text-sm font-mono text-slate-400">{index + 1}</span>
+                  <span className="text-sm text-slate-700 truncate">{registro.name}</span>
                   <div className="relative flex justify-end" ref={menuAbiertoId === registro.id ? menuRef : null}>
                     <button
                       onClick={() => setMenuAbiertoId(menuAbiertoId === registro.id ? null : registro.id)}
-                      className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-700/50 transition-all duration-150 cursor-pointer"
+                      className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-all duration-150 cursor-pointer"
                     >
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
                         <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
@@ -259,10 +259,10 @@ function App() {
 
                     {/* Menú desplegable */}
                     {menuAbiertoId === registro.id && (
-                      <div className="absolute right-0 top-full mt-1 w-36 bg-slate-800 border border-slate-600/50 rounded-xl shadow-xl shadow-black/30 z-50 overflow-hidden animate-in fade-in">
+                      <div className="absolute right-0 top-full mt-1 w-36 bg-white border border-slate-200 rounded-xl shadow-xl shadow-black/10 z-50 overflow-hidden animate-in fade-in">
                         <button
                           onClick={() => handleEditar(registro)}
-                          className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-slate-300 hover:bg-slate-700/60 hover:text-white transition-colors cursor-pointer"
+                          className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors cursor-pointer"
                         >
                           <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-blue-400" viewBox="0 0 20 20" fill="currentColor">
                             <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
@@ -271,7 +271,7 @@ function App() {
                         </button>
                         <button
                           onClick={() => handleEliminar(registro.id)}
-                          className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-colors cursor-pointer"
+                          className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-red-500 hover:bg-red-50 hover:text-red-600 transition-colors cursor-pointer"
                         >
                           <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
                             <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
@@ -288,8 +288,8 @@ function App() {
 
           {/* Footer con conteo */}
           {registros.length > 0 && (
-            <div className="px-5 py-2.5 bg-slate-800/40 border-t border-slate-700/50">
-              <p className="text-xs text-slate-500">
+            <div className="px-5 py-2.5 bg-slate-50 border-t border-slate-200">
+              <p className="text-xs text-slate-400">
                 {registros.length} registro{registros.length !== 1 ? 's' : ''}
               </p>
             </div>
