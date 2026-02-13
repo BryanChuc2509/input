@@ -56,15 +56,15 @@ function App() {
     e.preventDefault()
     if (!nombre.trim()) return
 
-    if (/[<>]/.test(nombre)) {
-      setError('¡Eyeyeyeyyy, tranquilo hacker! No se permiten los caracteres < > :v')
-      return
-    }
+    // if (/[<>]/.test(nombre)) {
+    //   setError('¡Eyeyeyeyyy, tranquilo hacker! No se permiten los caracteres < > :v')
+    //   return
+    // }
 
-    if (/[*]/.test(nombre)) {
-      setError('¡Eyeyeyeyyy, tranquilo hacker! SELECT * FROM ip; 127.0.0.1 :v')
-      return
-    }
+    // if (/[*]/.test(nombre)) {
+    //   setError('¡Eyeyeyeyyy, tranquilo hacker! SELECT * FROM ip; 127.0.0.1 :v')
+    //   return
+    // }
     setError(null)
 
     try {
