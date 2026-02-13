@@ -148,7 +148,11 @@ function App() {
             Registro de Nombres
           </h1>
           <p className="text-slate-400 mt-2 text-sm">
-            Agrega, edita y elimina registros
+            No se aceptan: números ni símbolos como
+            {" < > ( ) = ' \" / \\ ; { } @ # $ % & * ! ? + _ . , : | "}
+          </p>
+          <p className="text-slate-400 mt-2 text-sm">
+            No vas a poder? Si puedes me dices, va?
           </p>
         </div>
 
@@ -192,19 +196,17 @@ function App() {
             </div>
             <button
               type="submit"
-              className={`px-6 py-3 rounded-xl font-semibold text-sm transition-all duration-200 cursor-pointer ${
-                editandoId !== null
+              className={`px-6 py-3 rounded-xl font-semibold text-sm transition-all duration-200 cursor-pointer ${editandoId !== null
                   ? 'bg-amber-500 hover:bg-amber-400 text-slate-900 shadow-lg shadow-amber-500/20'
                   : 'bg-blue-500 hover:bg-blue-400 text-white shadow-lg shadow-blue-500/20'
-              }`}
+                }`}
             >
               {editandoId !== null ? 'Guardar' : 'Agregar'}
             </button>
           </div>
           {nombre.length > 0 && (
-            <p className={`text-xs mt-2 text-right ${
-              nombre.length > 240 ? 'text-amber-400' : 'text-slate-500'
-            }`}>
+            <p className={`text-xs mt-2 text-right ${nombre.length > 240 ? 'text-amber-400' : 'text-slate-500'
+              }`}>
               {nombre.length}/255
             </p>
           )}
@@ -240,9 +242,8 @@ function App() {
               {registros.map((registro, index) => (
                 <div
                   key={registro.id}
-                  className={`grid grid-cols-[60px_1fr_48px] items-center px-5 py-3.5 transition-colors duration-150 hover:bg-slate-700/20 ${
-                    editandoId === registro.id ? 'bg-amber-500/5 border-l-2 border-l-amber-500' : ''
-                  }`}
+                  className={`grid grid-cols-[60px_1fr_48px] items-center px-5 py-3.5 transition-colors duration-150 hover:bg-slate-700/20 ${editandoId === registro.id ? 'bg-amber-500/5 border-l-2 border-l-amber-500' : ''
+                    }`}
                 >
                   <span className="text-sm font-mono text-slate-500">{index + 1}</span>
                   <span className="text-sm text-slate-200 truncate">{registro.name}</span>
