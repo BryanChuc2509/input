@@ -123,6 +123,18 @@ function App() {
     inputRef.current?.focus()
   }
 
+  // Sanitizar input: bloquear caracteres de inyección
+  const handleInputChange = (value: string) => {
+    if (/[<>{}]/.test(value)) {
+      setError('¡Eyeyeyeyyy, tranquilo hacker! :v')
+      return
+    }
+    setError(null)
+    if (value.length <= 255) {
+      setNombre(value)
+    }
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-start justify-center pt-16 px-4">
       <div className="w-full max-w-xl">
@@ -156,8 +168,9 @@ function App() {
                 ref={inputRef}
                 type="text"
                 value={nombre}
-                onChange={e => setNombre(e.target.value)}
+                onChange={e => handleInputChange(e.target.value)}
                 placeholder="Escribe un nombre..."
+                maxLength={255}
                 className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 outline-none transition-all duration-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:bg-slate-800"
               />
               {editandoId !== null && (
@@ -184,6 +197,13 @@ function App() {
               {editandoId !== null ? 'Guardar' : 'Agregar'}
             </button>
           </div>
+          {nombre.length > 0 && (
+            <p className={`text-xs mt-2 text-right ${
+              nombre.length > 240 ? 'text-amber-400' : 'text-slate-500'
+            }`}>
+              {nombre.length}/255
+            </p>
+          )}
         </form>
 
         {/* Tabla de registros */}
