@@ -140,8 +140,8 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-white flex items-start justify-center pt-16 px-4">
-      <div className="w-full max-w-xl">
+    <div className="min-h-screen bg-white flex items-start justify-center pt-16 px-4 md:px-6">
+      <div className="w-full md:w-[80%]">
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-blue-600 via-blue-400 to-cyan-400 bg-clip-text text-transparent">
